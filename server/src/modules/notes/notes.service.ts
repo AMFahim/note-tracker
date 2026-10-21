@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { ClientSession, Model, Types } from 'mongoose';
 import { Role } from '../../common/constants/role.enum';
 import { CursorPaginationDto } from '../../common/dto/pagination.dto';
 import { AuthUser } from '../../common/interfaces/auth-user.interface';
@@ -74,8 +74,11 @@ export class NotesService {
     this.orNotFound(await this.noteModel.findOneAndDelete({ _id: id, owner }));
   }
 
-  async deleteByOwner(owner: Types.ObjectId): Promise<void> {
-    await this.noteModel.deleteMany({ owner });
+  async deleteByOwner(
+    owner: Types.ObjectId,
+    session: ClientSession,
+  ): Promise<void> {
+    await this.noteModel.deleteMany({ owner }, { session });
   }
 
   private orNotFound(note: NoteDocument | null): NoteDocument {

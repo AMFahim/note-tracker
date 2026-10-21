@@ -4,8 +4,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types, UpdateQuery } from 'mongoose';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { Connection, Model, Types, UpdateQuery } from 'mongoose';
 import {
   CursorPaginationDto,
   InterestPaginationDto,
@@ -29,6 +29,7 @@ import { User, UserDocument } from './schemas/user.schema';
 @Injectable()
 export class UsersService {
   constructor(
+    @InjectConnection() private readonly connection: Connection,
     @InjectModel(User.name) private readonly userModel: Model<User>,
     private readonly passwordService: PasswordService,
     private readonly notesService: NotesService,
@@ -167,14 +168,14 @@ export class UsersService {
     if (actor.id.equals(id)) {
       throw new ForbiddenException('You cannot delete your own account');
     }
-    const user = await this.userModel.findByIdAndDelete(id);
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-    await Promise.all([
-      this.notesService.deleteByOwner(id),
-      this.postsService.deleteByAuthor(id),
-    ]);
+    await this.connection.transaction(async (session) => {
+      const user = await this.userModel.findByIdAndDelete(id, { session });
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+      await this.notesService.deleteByOwner(id, session);
+      await this.postsService.deleteByAuthor(id, session);
+    });
   }
 
   private async applyUpdate(

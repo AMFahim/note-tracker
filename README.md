@@ -37,12 +37,15 @@ Admins cannot delete their own account or change their own role. Deleting a user
 
 - Node.js 22 LTS or 24
 - Yarn 4 via Corepack (`corepack enable`)
-- MongoDB 7.0+
+- MongoDB 7.0+ running as a replica set. Deleting a user removes their notes and posts in one transaction, and MongoDB only supports transactions on a replica set. A single node is enough.
 
 ```bash
 corepack enable
-docker run -d --name note-tracker-mongo -p 27017:27017 mongo:7
+docker run -d --name note-tracker-mongo -p 27017:27017 mongo:7 --replSet rs0
+docker exec note-tracker-mongo mongosh --quiet --eval 'rs.initiate()'
 ```
+
+For a native `mongod`, add `replication: { replSetName: rs0 }` to `mongod.conf`, restart it, and run `rs.initiate()` once in `mongosh`.
 
 ### Environment
 
@@ -52,7 +55,7 @@ docker run -d --name note-tracker-mongo -p 27017:27017 mongo:7
 | -------- | -------- | ------- | ----- |
 | `NODE_ENV` | no | `development` | `development` or `production` |
 | `PORT` | no | `4000` | |
-| `MONGODB_URI` | yes | | `mongodb://localhost:27017/note_tracker` |
+| `MONGODB_URI` | yes | | `mongodb://localhost:27017/note_tracker?directConnection=true` |
 | `JWT_SECRET` | yes | | At least 32 characters: `openssl rand -base64 48` |
 | `JWT_EXPIRES_IN` | no | `1d` | |
 | `CORS_ORIGIN` | no | `http://localhost:3000` | Comma-separated list allowed |
@@ -329,6 +332,7 @@ const [result] = await this.userModel.aggregate<UserPosts>([
 | Token theft | httpOnly cookie, `SameSite=Lax`, `Secure` in production |
 | Token revocation | Each JWT carries the user's `tokenVersion`, checked on the existing `_id` lookup, so no extra index. Logout, password change and an admin password reset increment it, which invalidates every token issued before |
 | Privilege escalation | Role loaded from the database on each request; register and profile updates do not accept `role` |
+| Orphaned data | Deleting a user removes the user, their notes and their posts in one transaction |
 | Insecure direct object reference | Ownership is part of the query filter, e.g. `{ _id, owner }` |
 | Operator injection, mass assignment | Global `ValidationPipe` with `whitelist` and `forbidNonWhitelisted`, so every query value is a validated string or `ObjectId`; schemas use `strictQuery` |
 | Configuration | Environment validated at startup; the app refuses to start on a missing or weak `JWT_SECRET` |

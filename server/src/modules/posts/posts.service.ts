@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, PipelineStage, Types } from 'mongoose';
+import { ClientSession, Model, PipelineStage, Types } from 'mongoose';
 import { CursorPaginationDto } from '../../common/dto/pagination.dto';
 import { toObjectId } from '../../common/utils/object-id.util';
 import {
@@ -98,7 +98,10 @@ export class PostsService {
     return new Page({ author: result.author, posts: items }, meta);
   }
 
-  async deleteByAuthor(author: Types.ObjectId): Promise<void> {
-    await this.postModel.deleteMany({ author });
+  async deleteByAuthor(
+    author: Types.ObjectId,
+    session: ClientSession,
+  ): Promise<void> {
+    await this.postModel.deleteMany({ author }, { session });
   }
 }
