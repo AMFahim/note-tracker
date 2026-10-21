@@ -1,0 +1,57 @@
+"use client";
+
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { queryKeys } from "@/lib/query-keys";
+import type { AuthSession } from "@/types/api";
+import { authApi } from "./api";
+import type { LoginValues, RegisterValues } from "./schemas";
+
+export const HOME_PATH = "/notes";
+
+export function useSession() {
+  return useQuery({
+    queryKey: queryKeys.session,
+    queryFn: authApi.me,
+    staleTime: 5 * 60_000,
+  });
+}
+
+function useStartSession() {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+  return ({ user }: AuthSession) => {
+    queryClient.clear();
+    queryClient.setQueryData(queryKeys.session, user);
+    router.replace(HOME_PATH);
+  };
+}
+
+export function useLogin() {
+  const startSession = useStartSession();
+  return useMutation({
+    mutationFn: (values: LoginValues) => authApi.login(values),
+    onSuccess: startSession,
+  });
+}
+
+export function useRegister() {
+  const startSession = useStartSession();
+  return useMutation({
+    mutationFn: (values: RegisterValues) => authApi.register(values),
+    onSuccess: startSession,
+  });
+}
+
+export function useLogout() {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+  return useMutation({
+    mutationFn: authApi.logout,
+    onSettled: () => {
+      queryClient.clear();
+      queryClient.setQueryData(queryKeys.session, null);
+      router.replace("/login");
+    },
+  });
+}

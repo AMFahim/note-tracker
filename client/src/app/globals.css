@@ -1,0 +1,172 @@
+@import "tailwindcss";
+
+:root {
+  --sand-1: #fdfdfc;
+  --sand-2: #f9f9f8;
+  --sand-3: #f1f0ef;
+  --sand-4: #e9e8e6;
+  --sand-6: #dad9d6;
+  --sand-8: #bcbbb5;
+  --sand-9: #8d8d86;
+  --sand-11: #63635e;
+  --sand-12: #21201c;
+  --teal-3: #e0f8f3;
+  --teal-4: #ccf3ea;
+  --teal-9: #12a594;
+  --teal-12: #0d3d38;
+  --red-3: #feebec;
+  --red-6: #fdbdbe;
+  --red-9: #e5484d;
+  --red-10: #dc3e42;
+  --red-11: #ce2c31;
+  --red-12: #641723;
+  --grass-3: #e9f6e9;
+  --grass-11: #2a7e3b;
+  --grass-12: #203c25;
+  --amber-3: #fff7c2;
+  --amber-11: #ab6400;
+  --amber-12: #4f3422;
+
+  --canvas: var(--sand-1);
+  --surface: var(--sand-2);
+  --surface-hover: var(--sand-3);
+  --surface-active: var(--sand-4);
+  --border: var(--sand-6);
+  --border-control: var(--sand-9);
+  --ink: var(--sand-12);
+  --ink-muted: var(--sand-11);
+  --primary: var(--sand-12);
+  --primary-hover: var(--sand-11);
+  --on-primary: var(--sand-1);
+  --accent: var(--teal-9);
+  --accent-subtle: var(--teal-3);
+  --on-accent-subtle: var(--teal-12);
+  --danger: var(--red-11);
+  --danger-hover: var(--red-12);
+  --on-danger: #ffffff;
+  --danger-text: var(--red-11);
+  --danger-subtle: var(--red-3);
+  --danger-border: var(--red-6);
+  --danger-ink: var(--red-12);
+  --success-subtle: var(--grass-3);
+  --success-ink: var(--grass-12);
+  --warning-subtle: var(--amber-3);
+  --warning-ink: var(--amber-12);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --sand-1: #111110;
+    --sand-2: #191918;
+    --sand-3: #222221;
+    --sand-4: #2a2a28;
+    --sand-6: #3b3a37;
+    --sand-8: #62605b;
+    --sand-9: #6f6d66;
+    --sand-11: #b5b3ad;
+    --sand-12: #eeeeec;
+    --teal-3: #0d2d2a;
+    --teal-4: #023b37;
+    --teal-9: #12a594;
+    --teal-12: #adf0dd;
+    --red-3: #3b1219;
+    --red-6: #72232d;
+    --red-9: #e5484d;
+    --red-10: #ec5d5e;
+    --red-11: #ff9592;
+    --red-12: #ffd1d9;
+    --grass-3: #1b2a1e;
+    --grass-11: #71d083;
+    --grass-12: #c2f0c2;
+    --amber-3: #302008;
+    --amber-11: #ffca16;
+    --amber-12: #ffe7b3;
+
+    --border-control: var(--sand-8);
+    --accent-subtle: var(--teal-4);
+    --danger: var(--red-9);
+    --danger-hover: var(--red-10);
+    --on-danger: var(--sand-1);
+    --danger-ink: var(--red-11);
+    --success-ink: var(--grass-11);
+    --warning-ink: var(--amber-11);
+  }
+}
+
+@theme {
+  --color-*: initial;
+  --font-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+
+  --radius-control: 4px;
+  --radius-card: 6px;
+
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1rem;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.25rem;
+  --text-base: 1rem;
+  --text-base--line-height: 1.5rem;
+  --text-lg: 1.1875rem;
+  --text-lg--line-height: 1.75rem;
+  --text-xl: 1.4375rem;
+  --text-xl--line-height: 1.875rem;
+  --text-2xl: 1.75rem;
+  --text-2xl--line-height: 2.125rem;
+}
+
+@theme inline {
+  --font-sans: var(--font-plex-sans), system-ui, sans-serif;
+  --font-serif: var(--font-source-serif), Georgia, serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-active: var(--surface-active);
+  --color-border: var(--border);
+  --color-border-control: var(--border-control);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-on-primary: var(--on-primary);
+  --color-accent: var(--accent);
+  --color-accent-subtle: var(--accent-subtle);
+  --color-on-accent-subtle: var(--on-accent-subtle);
+  --color-danger: var(--danger);
+  --color-danger-hover: var(--danger-hover);
+  --color-on-danger: var(--on-danger);
+  --color-danger-text: var(--danger-text);
+  --color-danger-subtle: var(--danger-subtle);
+  --color-danger-border: var(--danger-border);
+  --color-danger-ink: var(--danger-ink);
+  --color-success-subtle: var(--success-subtle);
+  --color-success-ink: var(--success-ink);
+  --color-warning-subtle: var(--warning-subtle);
+  --color-warning-ink: var(--warning-ink);
+}
+
+@layer base {
+  html {
+    color-scheme: light dark;
+  }
+
+  body {
+    @apply bg-canvas font-sans text-base text-ink antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      transition-duration: 0s !important;
+    }
+  }
+}
