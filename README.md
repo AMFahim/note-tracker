@@ -15,6 +15,14 @@ note_tracker/
 └── client/   Next.js frontend (Yarn 4)
 ```
 
+## Live
+
+| App | URL |
+| --- | --- |
+| Frontend | https://note-tracker-theta.vercel.app |
+| API | https://note-tracker-8nld.onrender.com/api |
+| Health check | https://note-tracker-8nld.onrender.com/api/health |
+
 ## Roles
 
 | Capability | Guest | User | Admin |
@@ -39,14 +47,6 @@ Admins cannot delete their own account or change their own role. Deleting a user
 - Node.js 22 LTS or 24
 - Yarn 4 via Corepack (`corepack enable`)
 - MongoDB 7.0+ running as a replica set. Deleting a user removes their notes and posts in one transaction, and MongoDB only supports transactions on a replica set. A single node is enough.
-
-```bash
-corepack enable
-docker run -d --name note-tracker-mongo -p 27017:27017 mongo:7 --replSet rs0
-docker exec note-tracker-mongo mongosh --quiet --eval 'rs.initiate()'
-```
-
-For a native `mongod`, add `replication: { replSetName: rs0 }` to `mongod.conf`, restart it, and run `rs.initiate()` once in `mongosh`.
 
 ### Environment
 
@@ -87,7 +87,7 @@ yarn install
 yarn dev
 ```
 
-Open `http://localhost:3000` and sign in with `ADMIN_EMAIL` and `ADMIN_PASSWORD`. You can run `yarn seed` more than once safely. It upserts the admin account and inserts demo users (password `Demo1234`) with overlapping interests, plus notes and posts for each.
+The API listens on `http://localhost:4000/api` and the frontend on `http://localhost:3000`. Open the frontend and sign in with `ADMIN_EMAIL` and `ADMIN_PASSWORD`. You can run `yarn seed` more than once safely. It upserts the admin account and inserts demo users (password `Demo1234`) with overlapping interests, plus notes and posts for each.
 
 ### Scripts
 
@@ -131,6 +131,7 @@ GET /api/notes?limit=20&cursor=6716f1c2e4b0a1b2c3d4e5f6
 
 | Method | Path | Access | Purpose |
 | ------ | ---- | ------ | ------- |
+| GET | `/health` | Public | API and database status |
 | POST | `/auth/register` | Public | Create account (role `user`) |
 | POST | `/auth/login` | Public | Log in |
 | POST | `/auth/logout` | Public | Revoke the user's tokens and clear session cookie |
@@ -366,8 +367,3 @@ Update requests accept a partial body and reject an empty one.
 - Code is organized by feature (`features/auth`, `notes`, `posts`, `users`, `interests`). Each feature has its own API calls, hooks, Zod schemas and components, built on shared UI primitives in `components/ui`.
 - All lists share one `useInfiniteQuery` wrapper and a "Load more" control.
 - Forms use React Hook Form with Zod schemas that mirror the server rules. A shared `useFormSubmit` hook maps server validation messages back onto the matching fields.
-- Colors come from the Radix Colors Sand and Teal scales and are used through semantic tokens. Every text pairing meets WCAG 2.2 AA contrast in both light and dark themes. Fonts: IBM Plex Sans, Source Serif 4, IBM Plex Mono.
-
-## Out of Scope
-
-Refresh tokens, email verification, password reset, full-text search, and automated tests.
