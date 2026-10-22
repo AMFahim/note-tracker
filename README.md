@@ -1,5 +1,12 @@
 # Note Tracker
 
+## Demo Credentials
+
+| Role | Email | Password |
+| ---- | ----- | -------- |
+| Admin | admin@gmail.com | Admin1234 |
+| User | fahim@gmail.com | Fahim1234 |
+
 A note-taking REST API with a functional frontend. Users manage their own notes; admins also manage users and can read every note. Authentication uses JWT and role-based access control. The MongoDB layer uses as few indexes as possible, and each index exists for a specific query.
 
 | Layer | Stack |
