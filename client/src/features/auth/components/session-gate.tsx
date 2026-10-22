@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, type ReactNode } from "react";
 import { Alert } from "@/components/ui/alert";
-import { LoadingText } from "@/components/ui/loading-text";
+import { PageSkeleton } from "@/components/ui/skeleton";
 import { useSession } from "../hooks";
 
 export function SessionGate({ children }: { children: ReactNode }) {
@@ -21,7 +21,7 @@ export function SessionGate({ children }: { children: ReactNode }) {
     return <Alert>{error.message}</Alert>;
   }
   if (!user) {
-    return <LoadingText />;
+    return <PageSkeleton />;
   }
   return children;
 }

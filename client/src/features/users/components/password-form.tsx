@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
-import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { useFormSubmit } from "@/hooks/use-form-submit";
 import { useChangePassword } from "../hooks";
 import { passwordSchema, type PasswordValues } from "../schemas";
@@ -32,9 +32,8 @@ export function PasswordForm() {
       {changePassword.isSuccess && !isDirty && <Alert tone="success">Password changed.</Alert>}
       <FormField label="Current password" error={errors.currentPassword?.message}>
         {(control) => (
-          <Input
+          <PasswordInput
             {...control}
-            type="password"
             autoComplete="current-password"
             {...form.register("currentPassword")}
           />
@@ -46,9 +45,8 @@ export function PasswordForm() {
         error={errors.newPassword?.message}
       >
         {(control) => (
-          <Input
+          <PasswordInput
             {...control}
-            type="password"
             autoComplete="new-password"
             {...form.register("newPassword")}
           />
@@ -56,9 +54,8 @@ export function PasswordForm() {
       </FormField>
       <FormField label="Confirm new password" error={errors.confirmPassword?.message}>
         {(control) => (
-          <Input
+          <PasswordInput
             {...control}
-            type="password"
             autoComplete="new-password"
             {...form.register("confirmPassword")}
           />

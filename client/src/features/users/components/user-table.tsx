@@ -4,6 +4,7 @@ import Link from "next/link";
 import { QueryState } from "@/components/data/query-state";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
+import { TableSkeleton } from "@/components/ui/skeleton";
 import { formatDate } from "@/lib/format";
 import { useUsers } from "../hooks";
 
@@ -14,7 +15,7 @@ export function UserTable() {
   const users = useUsers();
 
   return (
-    <QueryState isPending={users.isPending} error={users.error}>
+    <QueryState isPending={users.isPending} error={users.error} skeleton={<TableSkeleton />}>
       {users.items.length === 0 ? (
         <EmptyState message="There are no users yet." />
       ) : (

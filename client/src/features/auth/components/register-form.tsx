@@ -1,13 +1,13 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
 import { InterestsInput } from "@/components/fields/interests-input";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { useFormSubmit } from "@/hooks/use-form-submit";
 import { useRegister } from "../hooks";
 import { registerSchema, type RegisterValues } from "../schemas";
@@ -41,9 +41,8 @@ export function RegisterForm() {
         error={errors.password?.message}
       >
         {(control) => (
-          <Input
+          <PasswordInput
             {...control}
-            type="password"
             autoComplete="new-password"
             {...form.register("password")}
           />
@@ -61,14 +60,14 @@ export function RegisterForm() {
           />
         )}
       />
-      <div className="flex items-center gap-4">
-        <Button type="submit" pending={registerUser.isPending} pendingLabel="Creating account…">
-          Create account
-        </Button>
-        <Link href="/login" className="text-sm underline underline-offset-4">
-          I already have an account
-        </Link>
-      </div>
+      <Button
+        type="submit"
+        pending={registerUser.isPending}
+        pendingLabel="Creating account…"
+        className="mt-2 w-full"
+      >
+        Create account
+      </Button>
     </form>
   );
 }

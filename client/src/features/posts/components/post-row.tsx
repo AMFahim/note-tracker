@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { formatDate } from "@/lib/format";
 
 interface PostRowProps {
@@ -7,9 +8,10 @@ interface PostRowProps {
   body: string;
   createdAt: string;
   author?: { id: string; name: string } | null;
+  actions?: ReactNode;
 }
 
-export function PostRow({ id, title, body, createdAt, author }: PostRowProps) {
+export function PostRow({ id, title, body, createdAt, author, actions }: PostRowProps) {
   return (
     <article className="flex flex-col gap-1 py-4">
       <h2 className="font-semibold">
@@ -29,6 +31,7 @@ export function PostRow({ id, title, body, createdAt, author }: PostRowProps) {
         )}
         {formatDate(createdAt)}
       </p>
+      {actions && <div className="mt-2 flex gap-2">{actions}</div>}
     </article>
   );
 }

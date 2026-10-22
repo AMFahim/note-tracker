@@ -2,10 +2,14 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, type ReactNode } from "react";
-import { LoadingText } from "@/components/ui/loading-text";
 import { HOME_PATH, useSession } from "../hooks";
 
-export function GuestOnly({ children }: { children: ReactNode }) {
+interface GuestOnlyProps {
+  fallback: ReactNode;
+  children: ReactNode;
+}
+
+export function GuestOnly({ fallback, children }: GuestOnlyProps) {
   const router = useRouter();
   const { data: user, isPending } = useSession();
 
@@ -16,7 +20,7 @@ export function GuestOnly({ children }: { children: ReactNode }) {
   }, [user, router]);
 
   if (isPending || user) {
-    return <LoadingText />;
+    return fallback;
   }
   return children;
 }

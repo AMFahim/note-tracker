@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "Profile" };
 export default function ProfilePage() {
   return (
     <>
-      <PageHeader title="Profile" />
+      <PageHeader title="Profile" description="Manage your account details and password." />
       <Profile />
     </>
   );

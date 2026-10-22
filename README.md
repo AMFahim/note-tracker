@@ -227,7 +227,7 @@ db.users.getIndexes();
 db.notes.getIndexes();
 db.posts.getIndexes();
 
-const uid = db.users.findOne({ email: "admin@example.com" })._id;
+const uid = db.users.findOne({ email: "admin@gmail.com" })._id;
 db.notes.find({ owner: uid }).sort({ _id: -1 }).limit(21).explain("executionStats");
 ```
 

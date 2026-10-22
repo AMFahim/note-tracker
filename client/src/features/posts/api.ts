@@ -8,4 +8,7 @@ export const postsApi = {
   byUser: (userId: string, cursor?: string) =>
     api<CursorPage<UserPosts>>(withQuery(`/users/${userId}/posts`, { cursor })),
   create: (values: PostValues) => apiData<Post>("/posts", { method: "POST", body: values }),
+  update: (id: string, values: PostValues) =>
+    apiData<Post>(`/posts/${id}`, { method: "PATCH", body: values }),
+  remove: (id: string) => api<void>(`/posts/${id}`, { method: "DELETE" }),
 };

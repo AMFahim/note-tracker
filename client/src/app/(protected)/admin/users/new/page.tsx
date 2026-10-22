@@ -8,7 +8,9 @@ export default function NewUserPage() {
   return (
     <>
       <PageHeader title="Add user" />
-      <CreateUser />
+      <div className="max-w-md">
+        <CreateUser />
+      </div>
     </>
   );
 }

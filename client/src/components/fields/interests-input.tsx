@@ -1,8 +1,13 @@
 "use client";
 
 import { FormField } from "@/components/ui/form-field";
-import { TagInput } from "@/components/ui/tag-input";
-import { INTERESTS_MAX, interestError, normalizeInterest } from "@/lib/validation";
+import { MultiSelect } from "@/components/ui/multi-select";
+import { INTEREST_OPTIONS } from "@/lib/interests";
+import {
+  INTERESTS_MAX,
+  interestError,
+  normalizeInterest,
+} from "@/lib/validation";
 
 interface InterestsInputProps {
   value: string[];
@@ -11,23 +16,29 @@ interface InterestsInputProps {
   error?: string;
 }
 
-export function InterestsInput({ value, onChange, onBlur, error }: InterestsInputProps) {
+export function InterestsInput({
+  value,
+  onChange,
+  onBlur,
+  error,
+}: InterestsInputProps) {
   return (
     <FormField
       label="Interests"
-      hint={`Press Enter to add. Up to ${INTERESTS_MAX}.`}
+      hint={`Pick up to ${INTERESTS_MAX}. Type to search or add your own.`}
       error={error}
     >
       {(control) => (
-        <TagInput
+        <MultiSelect
           {...control}
+          options={INTEREST_OPTIONS}
           value={value}
           onChange={onChange}
           onBlur={onBlur}
           max={INTERESTS_MAX}
           normalize={normalizeInterest}
           validate={interestError}
-          placeholder="chess, reading, hiking"
+          placeholder="Search interests"
         />
       )}
     </FormField>

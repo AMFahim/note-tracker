@@ -12,6 +12,7 @@ import {
 } from '../../common/utils/pagination.util';
 import { User } from '../users/schemas/user.schema';
 import { CreatePostDto } from './dto/create-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
 import { UserPosts } from './interfaces/user-posts.interface';
 import { Post, PostDocument } from './schemas/post.schema';
 
@@ -48,10 +49,25 @@ export class PostsService {
     const post = await this.postModel
       .findById(id)
       .populate('author', AUTHOR_FIELDS);
-    if (!post) {
-      throw new NotFoundException('Post not found');
-    }
-    return post;
+    return this.orNotFound(post);
+  }
+
+  async update(
+    id: Types.ObjectId,
+    author: Types.ObjectId,
+    dto: UpdatePostDto,
+  ): Promise<PostDocument> {
+    const post = await this.postModel
+      .findOneAndUpdate({ _id: id, author }, dto, {
+        new: true,
+        runValidators: true,
+      })
+      .populate('author', AUTHOR_FIELDS);
+    return this.orNotFound(post);
+  }
+
+  async remove(id: Types.ObjectId, author: Types.ObjectId): Promise<void> {
+    this.orNotFound(await this.postModel.findOneAndDelete({ _id: id, author }));
   }
 
   async findByAuthor(
@@ -103,5 +119,12 @@ export class PostsService {
     session: ClientSession,
   ): Promise<void> {
     await this.postModel.deleteMany({ author }, { session });
+  }
+
+  private orNotFound(post: PostDocument | null): PostDocument {
+    if (!post) {
+      throw new NotFoundException('Post not found');
+    }
+    return post;
   }
 }

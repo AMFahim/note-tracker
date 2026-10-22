@@ -1,9 +1,14 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  type QueryClient,
+} from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { queryKeys } from "@/lib/query-keys";
-import type { AuthSession } from "@/types/api";
+import type { AuthSession, User } from "@/types/api";
 import { authApi } from "./api";
 import type { LoginValues, RegisterValues } from "./schemas";
 
@@ -17,12 +22,18 @@ export function useSession() {
   });
 }
 
+function replaceSession(queryClient: QueryClient, user: User | null) {
+  queryClient.setQueryData(queryKeys.session, user);
+  queryClient.removeQueries({
+    predicate: (query) => query.queryKey[0] !== queryKeys.session[0],
+  });
+}
+
 function useStartSession() {
   const queryClient = useQueryClient();
   const router = useRouter();
   return ({ user }: AuthSession) => {
-    queryClient.clear();
-    queryClient.setQueryData(queryKeys.session, user);
+    replaceSession(queryClient, user);
     router.replace(HOME_PATH);
   };
 }
@@ -49,8 +60,7 @@ export function useLogout() {
   return useMutation({
     mutationFn: authApi.logout,
     onSettled: () => {
-      queryClient.clear();
-      queryClient.setQueryData(queryKeys.session, null);
+      replaceSession(queryClient, null);
       router.replace("/login");
     },
   });

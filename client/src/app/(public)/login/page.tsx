@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { PageHeader } from "@/components/layout/page-header";
+import { FormSkeleton } from "@/components/ui/skeleton";
+import { AuthCard } from "@/features/auth/components/auth-card";
 import { GuestOnly } from "@/features/auth/components/guest-only";
 import { LoginForm } from "@/features/auth/components/login-form";
 
@@ -7,11 +8,14 @@ export const metadata: Metadata = { title: "Sign in" };
 
 export default function LoginPage() {
   return (
-    <section className="max-w-sm">
-      <PageHeader title="Sign in" />
-      <GuestOnly>
+    <AuthCard
+      title="Sign in"
+      description="Welcome back. Sign in to your notes."
+      footer={{ text: "New here?", linkLabel: "Create an account", href: "/register" }}
+    >
+      <GuestOnly fallback={<FormSkeleton fields={2} fullWidthButton />}>
         <LoginForm />
       </GuestOnly>
-    </section>
+    </AuthCard>
   );
 }

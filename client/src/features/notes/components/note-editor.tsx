@@ -3,6 +3,7 @@
 import { QueryState } from "@/components/data/query-state";
 import { PageHeader } from "@/components/layout/page-header";
 import { ConfirmButton } from "@/components/ui/confirm-button";
+import { FormSkeleton } from "@/components/ui/skeleton";
 import { useSession } from "@/features/auth/hooks";
 import { formatDateTime } from "@/lib/format";
 import type { Note } from "@/types/api";
@@ -14,7 +15,11 @@ export function NoteEditor({ id }: { id: string }) {
   const { data: user } = useSession();
 
   return (
-    <QueryState isPending={note.isPending} error={note.error}>
+    <QueryState
+      isPending={note.isPending}
+      error={note.error}
+      skeleton={<FormSkeleton fields={1} withHeader withTextarea />}
+    >
       {note.data &&
         (note.data.owner === user?.id ? (
           <EditableNote note={note.data} />

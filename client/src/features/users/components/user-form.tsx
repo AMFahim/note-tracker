@@ -7,6 +7,7 @@ import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Select } from "@/components/ui/select";
 import { useFormSubmit } from "@/hooks/use-form-submit";
 import {
@@ -57,7 +58,7 @@ export function UserForm({
   const { errors, isDirty } = form.formState;
 
   return (
-    <form noValidate className="flex max-w-md flex-col gap-4" onSubmit={submit}>
+    <form noValidate className="flex flex-col gap-4" onSubmit={submit}>
       {submitError && <Alert>{submitError}</Alert>}
       {saved && !isDirty && <Alert tone="success">User saved.</Alert>}
       <FormField label="Name" error={errors.name?.message}>
@@ -76,7 +77,7 @@ export function UserForm({
         error={errors.password?.message}
       >
         {(field) => (
-          <Input {...field} type="password" autoComplete="new-password" {...register("password")} />
+          <PasswordInput {...field} autoComplete="new-password" {...register("password")} />
         )}
       </FormField>
       <FormField
