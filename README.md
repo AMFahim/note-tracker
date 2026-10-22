@@ -24,7 +24,8 @@ note_tracker/
 | Create, list, view, update, delete own notes | | ✓ | ✓ |
 | View any note, list all notes | | | ✓ |
 | Update or delete another user's note | | | |
-| Create a post | | ✓ | ✓ |
+| Create a post; update or delete own posts | | ✓ | ✓ |
+| Update or delete another user's post | | | |
 | Read the post feed, a single post, and a user's posts | ✓ | ✓ | ✓ |
 | Create, list, view, update, delete users | | | ✓ |
 | View users grouped by interest | | | ✓ |
@@ -152,8 +153,10 @@ GET /api/notes?limit=20&cursor=6716f1c2e4b0a1b2c3d4e5f6
 | GET | `/posts` | Public | Post feed |
 | GET | `/posts/:id` | Public | Get post |
 | POST | `/posts` | Auth | Create post |
+| PATCH | `/posts/:id` | Owner | Update post |
+| DELETE | `/posts/:id` | Owner | Delete post |
 
-A note that belongs to another user returns `404`, not `403`, so callers can't probe which note ids exist.
+Updating or deleting a note or post that belongs to another user returns `404`, not `403`, so callers can't probe which ids exist.
 
 ### Errors
 
@@ -216,6 +219,7 @@ There are four secondary indexes in total.
 | `users.find().sort({ _id: -1 })` | `IXSCAN _id_` backward, no `SORT` |
 | `notes.find({ owner }).sort({ _id: -1 })` | `IXSCAN owner_1__id_-1`, no `SORT` |
 | `notes.findOne({ _id, owner })` | at most one key examined |
+| `posts.findOneAndUpdate({ _id, author })` | `_id_`, at most one key examined |
 | `notes.deleteMany({ owner })` | `IXSCAN owner_1__id_-1` |
 | interests aggregation | `IXSCAN interests_1` (multikey) |
 | user posts aggregation | `_id_` for the user, `author_1__id_-1` inside `$lookup` |
@@ -366,4 +370,4 @@ Update requests accept a partial body and reject an empty one.
 
 ## Out of Scope
 
-Refresh tokens, email verification, password reset, full-text search, editing or deleting posts, and automated tests.
+Refresh tokens, email verification, password reset, full-text search, and automated tests.
